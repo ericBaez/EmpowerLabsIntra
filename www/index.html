@@ -1,0 +1,376 @@
+<!doctype html>
+
+<html lang="en" ng-app="my-app">
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="lib/onsen/css/onsenui.css"/>
+		<link rel="stylesheet" href="lib/onsen/css/onsen-css-components.css"/>
+		<link rel="stylesheet" href="css/index.css" />
+		<script src="lib/onsen/js/angular/angular.js"></script>
+		<script src="lib/onsen/js/onsenui.js"></script>
+		<script src="js/index.js"></script>
+	</head>
+	<body ng-controller="AppController">
+		<ons-sliding-menu
+		menu-page="menu.html" main-page="page1.html" side="left"
+		var="menu" type="reveal" max-slide-distance="260px" swipable="true"></ons-sliding-menu>
+
+		<ons-template id="menu.html">
+			<ons-page modifier="menu-page">
+				<ons-toolbar modifier="custom-toolbar transparent"></ons-toolbar>
+
+				<ons-list class="menu-list">
+					<ons-list-item>
+						<div class="profile-card2">
+
+							<img src="Iconds.png" class="profile-image">
+							<div class="profile-name">
+								{{mydata.firstname}} {{mydata.lastname}}
+							</div>
+							<div class="profile-id">
+								{{mydata.user}}
+							</div>
+							<div class="profile-desc">
+								{{mydata.title}}
+							</div>
+
+						</div>
+
+					</ons-list-item>
+					<ons-list-item class="menu-item" ng-click="menu.setMainPage('page1.html', {closeMenu: true})">
+						<ons-icon icon="fa-home"></ons-icon>
+						Home
+					</ons-list-item>
+
+					<ons-list-item class="menu-item" ng-click="menu.setMainPage('PAP.html', {closeMenu: true})">
+						<ons-icon icon="fa fa-cubes"></ons-icon>
+						PAP
+					</ons-list-item>
+
+					<ons-list-item class="menu-item" ng-click="menu.setMainPage('Workflow.html', {closeMenu: true})">
+						<ons-icon icon="fa-calendar"></ons-icon>
+						Workflow
+					</ons-list-item>
+
+					<ons-list-item class="menu-item" ng-click="menu.setMainPage('TicketTracker.html', {closeMenu: true})">
+						<ons-icon icon="ion-clipboard"></ons-icon>
+						Ticket Tracker
+					</ons-list-item>
+
+					<ons-list-item class="menu-item" ng-click="menu.setMainPage('eCommunicator.html', {closeMenu: true})">
+						<ons-icon icon="ion-radio-waves"></ons-icon>
+						E - Communicator
+					</ons-list-item>
+
+					<ons-list-item class="menu-item" ng-click="menu.setMainPage('mblocs.html', {closeMenu: true})">
+						<ons-icon icon="ion-film-marker"></ons-icon>
+						mBlocs
+					</ons-list-item>
+
+					<ons-list-item class="menu-item" ng-click="menu.setMainPage('mensajes.html', {closeMenu: true})">
+						<ons-icon icon="ion-chatbubbles"></ons-icon>
+						Mensajes
+					</ons-list-item>
+				</ons-list>
+
+				<br>
+
+				<!--<ons-list class="bottom-menu-list">
+				<ons-list-item class="bottom-menu-item" ng-click="menu.setMainPage('page1.html', {closeMenu: true})">
+				Noticias
+				<div class="notification menu-notification">
+				3
+				</div>
+				</ons-list-item>
+
+				<ons-list-item class="bottom-menu-item" ng-click="menu.setMainPage('page1.html', {closeMenu: true})">
+				Ayuda
+				</ons-list-item>
+
+				<ons-list-item class="bottom-menu-item" ng-click="menu.setMainPage('page1.html', {closeMenu: true})">
+				Sugerencias
+				</ons-list-item>-->
+				</ons-list>
+			</ons-page>
+		</ons-template>
+		<ons-template id="page1.html">
+			<ons-navigator var="navigator">
+				<ons-page ng-controller="PageController">
+					<ons-toolbar class="custom-toolbar">
+						<div class="left">
+							<ons-toolbar-button ng-click="menu.toggle()">
+								<ons-icon icon="ion-navicon" size="28px" fixed-width="false"></ons-icon>
+							</ons-toolbar-button>
+						</div>
+						<div class="center">
+							EmpowerLabsIntra
+						</div>
+					</ons-toolbar>
+				</ons-page>
+			</ons-navigator>
+		</ons-template>
+		<ons-template id="mensajes.html">
+			<ons-navigator>
+				<ons-page ng-controller="MensajeController">
+					<ons-toolbar class="custom-toolbar">
+						<div class="left">
+							<ons-toolbar-button ng-click="menu.toggle()">
+								<ons-icon icon="ion-navicon" size="28px" fixed-width="false"></ons-icon>
+							</ons-toolbar-button>
+						</div>
+						<div class="center">
+							Mensajes
+						</div>
+						<div class="right">
+							<ons-toolbar-button ng-click="nuevoMensaje()">
+								<ons-icon icon="ion-compose" size="28px" fixed-width="false"></ons-icon>
+							</ons-toolbar-button>
+						</div>
+					</ons-toolbar>
+					<div style="margin-top: 90px">{{timeInMs}}</div>
+					<ons-bottom-toolbar>
+						<input type="text" class="text-input" style="width: 85%; margin-left: 8px; margin-top: 8px" placeholder="text" value="">
+      <i class="ion-android-send" style="font-size:18px; float: right; margin-right: 8px; margin-top: 12px" ng-click="enviarMensaje()"></i>
+					</ons-bottom-toolbar>
+				</ons-page>
+			</ons-navigator>
+		</ons-template>
+
+		<ons-template id="nuevoMensaje.html">
+			<ons-page ng-controller="newMessageController">
+				<ons-toolbar class="custom-toolbar">
+					<div class="left">
+						<ons-back-button>
+							Regresar
+						</ons-back-button>
+					</div>
+					<div class="center">
+						Nuevo Mensaje
+					</div>
+				</ons-toolbar>
+
+				<ons-list modifier="inset" style="margin-top: 30px">
+					<ons-list-item class="to-wrapper">
+						<ons-row>
+							<ons-col width="52px">
+								<img src="img/def.png" width="42" class="to-image">
+							</ons-col>
+							<ons-col>
+								<div class="to-name">
+									{{seleccion}}
+								</div>
+								<div class="to-email">
+									{{seleccion}}
+								</div>
+							</ons-col>
+						</ons-row>
+					</ons-list-item>
+					<ons-list-item>
+						<input type="text" class="text-input text-input--transparent" placeholder="Nombre" style="width: 100%">
+					</ons-list-item>
+
+					<ons-list-item>
+						<textarea name="textarea" class="textarea textarea--transparent" style="width: 100%; height: 100px;" placeholder="Mensaje"></textarea>
+					</ons-list-item>
+
+					<ons-list-item modifier="chevron">
+						<ons-icon icon="fa-tag" style="opacity:0.2"></ons-icon>
+					</ons-list-item>
+				</ons-list>
+
+				<div style="padding: 10px 9px">
+					<ons-button modifier="large" style="margin: 0 auto;">
+						Enviar
+					</ons-button>
+				</div>
+			</ons-page>
+		</ons-template>
+		<ons-template id="TicketTracker.html">
+			<ons-page ng-controller="TicketsController">
+				<ons-toolbar class="custom-toolbar">
+						<div class="left">
+							<ons-toolbar-button ng-click="menu.toggle()">
+								<ons-icon icon="ion-navicon custom-icon" size="28px" fixed-width="false"></ons-icon>
+							</ons-toolbar-button>
+						</div>
+						<div class="right">
+							<ons-toolbar-button ng-click="newTicket()" ng-controller="NewTicketController">
+								<ons-icon icon="ion-compose custom-icon"></ons-icon>
+							</ons-toolbar-button>
+						</div>
+						<div class="center">
+							Ticket Tracker
+						</div>
+					</ons-toolbar>
+					<div class="navigation-bar" style="margin-top: 30px">
+						<div class="navigation-bar__center">
+
+							<input type="search" class="search-input" style="width: 96%; margin: 6px auto 6px auto;" placeholder="Buscar" ng-model="entradaTicket">
+
+						</div>
+					</div>
+					<ons-list>
+
+						<!--<div id="ticketbox"></div>-->
+						<ons-list-item modifier="chevron" class="item" ng-repeat="item in items | filter : entradaTicket" ng-click="showTicket(item)">
+							<ons-row>
+								<ons-col width="60px">
+									<div class="item-thum"><img style="height: 50px; width: 50px;" src="{{item.thum}}"/></div>
+								</ons-col>
+								<ons-col>
+									<header>
+										<span class="item-title">{{item.tipo}}</span>
+										<span class="item-label">{{item.fecha}}</span>
+									</header>
+									<p class="item-desc">
+										{{item.problema}}
+									</p>
+								</ons-col>
+							</ons-row>
+						</ons-list-item>
+					</ons-list>
+			</ons-page>
+		</ons-template>
+		<ons-template id="PAP.html">
+			<ons-navigator var="navigator">
+				<ons-page ng-controller="PageController">
+					<ons-toolbar class="custom-toolbar">
+						<div class="left">
+							<ons-toolbar-button ng-click="menu.toggle()">
+								<ons-icon icon="ion-navicon" size="28px" fixed-width="false"></ons-icon>
+							</ons-toolbar-button>
+						</div>
+						<div class="center">
+							PAP
+						</div>
+					</ons-toolbar>
+				</ons-page>
+			</ons-navigator>
+		</ons-template>
+		<ons-template id="Workflow.html">
+			<ons-navigator var="navigator">
+				<ons-page ng-controller="PageController">
+					<ons-toolbar class="custom-toolbar">
+						<div class="left">
+							<ons-toolbar-button ng-click="menu.toggle()">
+								<ons-icon icon="ion-navicon" size="28px" fixed-width="false"></ons-icon>
+							</ons-toolbar-button>
+						</div>
+						<div class="center">
+							Workflow
+						</div>
+					</ons-toolbar>
+				</ons-page>
+			</ons-navigator>
+		</ons-template>
+		<ons-template id="eCommunicator.html">
+			<ons-navigator var="navigator">
+				<ons-page ng-controller="ECommunicator">
+					<ons-toolbar class="custom-toolbar">
+						<div class="left">
+							<ons-toolbar-button ng-click="menu.toggle()">
+								<ons-icon icon="ion-navicon" size="28px" fixed-width="false"></ons-icon>
+							</ons-toolbar-button>
+						</div>
+						<div class="center">
+							E - Communicator
+						</div>
+					</ons-toolbar>
+					<ons-list>
+					<style>
+            th { font-size: 15px;
+                font-family: Arial;
+                font-weight: normal; padding: 8px; background: #b9c9fe; border-top: 4px solid #aabcfe;
+                text-transform:uppercase;
+                 border-bottom: 1px solid #fff; color: #039;
+                }
+            
+            tr {
+                border: 0px solid #000;
+            }
+            td { padding: 8px; background: white; border-bottom: 1px solid #fff; color: #669; border-top: 1px solid transparent; }
+            .table-stroke thead th {
+                  border-bottom: 1px solid rgba(0, 0, 0, .1);
+                }
+                .table-stroke tbody th,
+                .table-stroke tbody td {
+                  border-bottom: 1px solid rgba(0, 0, 0, .05);
+                }
+ 
+
+            /*tr:hover td { background: #d0dafd; color: #339; } */
+            /* Add alternating row stripes */
+            .table-stripe tbody tr:nth-child(odd) td,
+            .table-stripe tbody tr:nth-child(odd) th {
+              background-color: rgba(0,0,0,0.04);
+            }
+            /* Add stroke to the header and last item */
+            .table-stripe thead th,
+            .table-stripe tbody tr:last-child {
+              border-bottom: 1px solid rgba(0, 0, 0, .1);
+            }
+			.name{
+				background: #2371AF;
+				height: 40px;
+				padding-top: 20px;
+				color: #FFFFFF;
+				text-align:center;
+			}
+</style>
+					<div ng-app="myApp" ng-controller="ECommunicator"> 
+
+					<p><input type="text" ng-model="test" data-type="search" placeholder="Buscar registro..." width="100%"></p>
+					<table class="table table-striped" ng-repeat="x in names |  filter:test" width="100%">
+					  <tr>
+					    <th>{{ x.ht }}</th>
+					  </tr>
+					  <tr>
+					    <td>{{ x.asunto }}</td>
+					  </tr>
+					  <tr>  
+					    <td>{{ x.Author}}</td>
+					  </tr>
+					  <tr>
+					    <td>{{ x.categoria }}</td>
+					  </tr>
+					  <tr>
+					    <td>{{ x.area }}</td>
+					  </tr>
+					  <tr>
+					    <td>{{ x.prioridad }}</td>
+					  </tr>
+					  <tr>
+					    <td>{{ x.fecha }}</td>
+					  </tr>
+					  <tr>
+					    <td>{{ x.activo }}</td>
+					  </tr>
+					  <tr>
+					    <td>{{ x.descripcion }}</td>
+					  </tr>
+					  </hr>
+					</table>
+				</div>
+				</ons-list>
+				</ons-page>
+			</ons-navigator>
+		</ons-template>
+		<ons-template id="mblocs.html">
+			<ons-navigator var="navigator">
+				<ons-page ng-controller="PageController">
+					<ons-toolbar class="custom-toolbar">
+						<div class="left">
+							<ons-toolbar-button ng-click="menu.toggle()">
+								<ons-icon icon="ion-navicon" size="28px" fixed-width="false"></ons-icon>
+							</ons-toolbar-button>
+						</div>
+						<div class="center">
+							mBlocs
+						</div>
+					</ons-toolbar>
+				</ons-page>
+			</ons-navigator>
+		</ons-template>
+		
+	</body>
+</html>
