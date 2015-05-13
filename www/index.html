@@ -12,7 +12,7 @@
 	</head>
 	<body ng-controller="AppController">
 		<ons-sliding-menu
-		menu-page="menu.html" main-page="page1.html" side="left"
+		menu-page="menu.html" main-page="chats.html" side="left"
 		var="menu" type="reveal" max-slide-distance="260px" swipable="true"></ons-sliding-menu>
 
 		<ons-template id="menu.html">
@@ -23,7 +23,7 @@
 					<ons-list-item>
 						<div class="profile-card2">
 
-							<img src="Iconds.png" class="profile-image">
+							<img src="{{mydata.image}}" class="profile-image">
 							<div class="profile-name">
 								{{mydata.firstname}} {{mydata.lastname}}
 							</div>
@@ -37,10 +37,10 @@
 						</div>
 
 					</ons-list-item>
-					<ons-list-item class="menu-item" ng-click="menu.setMainPage('page1.html', {closeMenu: true})">
-						<ons-icon icon="fa-home"></ons-icon>
-						Home
-					</ons-list-item>
+					<!--<ons-list-item class="menu-item" ng-click="menu.setMainPage('page1.html', {closeMenu: true})">
+					<ons-icon icon="fa-home"></ons-icon>
+					Home
+					</ons-list-item>-->
 
 					<ons-list-item class="menu-item" ng-click="menu.setMainPage('PAP.html', {closeMenu: true})">
 						<ons-icon icon="fa fa-cubes"></ons-icon>
@@ -59,7 +59,7 @@
 
 					<ons-list-item class="menu-item" ng-click="menu.setMainPage('eCommunicator.html', {closeMenu: true})">
 						<ons-icon icon="ion-radio-waves"></ons-icon>
-						E - Communicator
+						eCommunicator
 					</ons-list-item>
 
 					<ons-list-item class="menu-item" ng-click="menu.setMainPage('mblocs.html', {closeMenu: true})">
@@ -67,7 +67,7 @@
 						mBlocs
 					</ons-list-item>
 
-					<ons-list-item class="menu-item" ng-click="menu.setMainPage('mensajes.html', {closeMenu: true})">
+					<ons-list-item class="menu-item" ng-click="menu.setMainPage('chats.html', {closeMenu: true})">
 						<ons-icon icon="ion-chatbubbles"></ons-icon>
 						Mensajes
 					</ons-list-item>
@@ -93,6 +93,7 @@
 				</ons-list>
 			</ons-page>
 		</ons-template>
+<!--Page fontpage-->
 		<ons-template id="page1.html">
 			<ons-navigator var="navigator">
 				<ons-page ng-controller="PageController">
@@ -109,9 +110,10 @@
 				</ons-page>
 			</ons-navigator>
 		</ons-template>
-		<ons-template id="mensajes.html">
-			<ons-navigator>
-				<ons-page ng-controller="MensajeController">
+<!--Page chats-->
+		<ons-template id="chats.html">
+			<ons-navigator var="navigator">
+				<ons-page ng-controller="ChatsController">
 					<ons-toolbar class="custom-toolbar">
 						<div class="left">
 							<ons-toolbar-button ng-click="menu.toggle()">
@@ -119,7 +121,7 @@
 							</ons-toolbar-button>
 						</div>
 						<div class="center">
-							Mensajes
+							Mis Chats
 						</div>
 						<div class="right">
 							<ons-toolbar-button ng-click="nuevoMensaje()">
@@ -127,67 +129,108 @@
 							</ons-toolbar-button>
 						</div>
 					</ons-toolbar>
-					<div style="margin-top: 90px">{{timeInMs}}</div>
-					<ons-bottom-toolbar>
-						<input type="text" class="text-input" style="width: 85%; margin-left: 8px; margin-top: 8px" placeholder="text" value="">
-      <i class="ion-android-send" style="font-size:18px; float: right; margin-right: 8px; margin-top: 12px" ng-click="enviarMensaje()"></i>
-					</ons-bottom-toolbar>
+					<ons-list style="margin-top: 50px">
+
+						<ons-list-item modifier="chevron" class="item" ng-repeat="r in res" ng-click="showChat(r)">
+							<ons-row>
+								<ons-col>
+									<header>
+										<span class="item-title">{{r.who2}}</span>
+									</header>
+								</ons-col>
+							</ons-row>
+						</ons-list-item>
+					</ons-list>
 				</ons-page>
 			</ons-navigator>
 		</ons-template>
-
-		<ons-template id="nuevoMensaje.html">
-			<ons-page ng-controller="newMessageController">
+<!--Page Messages-->
+		<ons-template id="mensajes.html">
+			<ons-page ng-controller="MensajeController">
 				<ons-toolbar class="custom-toolbar">
 					<div class="left">
 						<ons-back-button>
-							Regresar
+
 						</ons-back-button>
 					</div>
 					<div class="center">
-						Nuevo Mensaje
+						{{previa.who2}}
 					</div>
 				</ons-toolbar>
+				<ons-list style="margin-top: 50px">
 
-				<ons-list modifier="inset" style="margin-top: 30px">
-					<ons-list-item class="to-wrapper">
+					<!--<div id="ticketbox"></div>-->
+					<ons-list-item class="item" ng-repeat="r in res | filter : entradaTicket" ng-click="showTicket(item)">
 						<ons-row>
-							<ons-col width="52px">
-								<img src="img/def.png" width="42" class="to-image">
+							<ons-col width="60px">
+								<div class="item-thum"><img style="height: 50px; width: 50px;" src="{{item.thum}}"/>
+								</div>
 							</ons-col>
 							<ons-col>
-								<div class="to-name">
-									{{seleccion}}
-								</div>
-								<div class="to-email">
-									{{seleccion}}
-								</div>
+								<header>
+									<span class="item-title">{{r.from}}</span>
+									<span class="item-label">{{r.time}}</span>
+								</header>
+								<p class="item-desc">
+									{{r.message}}
+								</p>
 							</ons-col>
 						</ons-row>
 					</ons-list-item>
-					<ons-list-item>
-						<input type="text" class="text-input text-input--transparent" placeholder="Nombre" style="width: 100%">
-					</ons-list-item>
-
-					<ons-list-item>
-						<textarea name="textarea" class="textarea textarea--transparent" style="width: 100%; height: 100px;" placeholder="Mensaje"></textarea>
-					</ons-list-item>
-
-					<ons-list-item modifier="chevron">
-						<ons-icon icon="fa-tag" style="opacity:0.2"></ons-icon>
-					</ons-list-item>
 				</ons-list>
+				<!---->
 
-				<div style="padding: 10px 9px">
-					<ons-button modifier="large" style="margin: 0 auto;">
-						Enviar
-					</ons-button>
-				</div>
+				<ons-bottom-toolbar>
+					<input type="text" class="text-input" style="width: 85%; margin-left: 8px; margin-top: 8px" placeholder="Message" ng-model="mensajeBox.message">
+					<i class="ion-android-send" style="font-size:18px; float: right; margin-right: 8px; margin-top: 12px" ng-click="enviarMensaje()"></i>
+				</ons-bottom-toolbar>
 			</ons-page>
 		</ons-template>
-		<ons-template id="TicketTracker.html">
-			<ons-page ng-controller="TicketsController">
+<!--Page newMessage-->
+		<ons-template id="nuevoMensaje.html">
+			<ons-page ng-controller="newMessageController">
+
 				<ons-toolbar class="custom-toolbar">
+					<div class="left">
+						<ons-back-button>
+							Cancelar
+						</ons-back-button>
+					</div>
+					<div class="center">
+						Colaboradores
+					</div>
+				</ons-toolbar>
+
+				<div class="navigation-bar">
+					<div class="navigation-bar__center">
+
+						<input type="search" class="search-input" style="width: 96%; margin: 6px auto 6px auto;" placeholder="Buscar" ng-model="entrada">
+
+					</div>
+				</div>
+
+				<ons-list class="person-list">
+					<ons-list-header class="person-list-header">
+						<!--{{data[char]}}-->
+					</ons-list-header>
+					<ons-list-item class="person" modifier="tappable" ng-repeat="i in data | filter:entrada">
+						<ons-row>
+							<ons-col width="40px">
+								<img src="img/user_icon_blue.png" style="height: 25px; width: 25px;" class="person-image">
+							</ons-col>
+							<ons-col class="person-name" ng-click="newMessage(i)">
+								{{i}}
+							</ons-col>
+						</ons-row>
+					</ons-list-item>
+				</ons-list>
+			</ons-page>
+		</ons-template>
+<!--Page ticket-->
+		<ons-template id="TicketTracker.html">
+			<ons-navigator>
+				<ons-page ng-controller="TicketsController">
+					<ons-toolbar class="custom-toolbar">
 						<div class="left">
 							<ons-toolbar-button ng-click="menu.toggle()">
 								<ons-icon icon="ion-navicon custom-icon" size="28px" fixed-width="false"></ons-icon>
@@ -199,7 +242,7 @@
 							</ons-toolbar-button>
 						</div>
 						<div class="center">
-							Ticket Tracker
+							Mesa de Trabajo
 						</div>
 					</ons-toolbar>
 					<div class="navigation-bar" style="margin-top: 30px">
@@ -215,7 +258,8 @@
 						<ons-list-item modifier="chevron" class="item" ng-repeat="item in items | filter : entradaTicket" ng-click="showTicket(item)">
 							<ons-row>
 								<ons-col width="60px">
-									<div class="item-thum"><img style="height: 50px; width: 50px;" src="{{item.thum}}"/></div>
+									<div class="item-thum"><img style="height: 50px; width: 50px;" src="{{item.thum}}"/>
+									</div>
 								</ons-col>
 								<ons-col>
 									<header>
@@ -229,11 +273,283 @@
 							</ons-row>
 						</ons-list-item>
 					</ons-list>
+				</ons-page>
+
+			</ons-navigator>
+		</ons-template>
+<!--Page one ticket-->
+		<ons-template id="ticket.html">
+			<ons-page ng-controller="TicketIndividualController">
+				<ons-toolbar class="custom-toolbar">
+					<div class="left">
+						<ons-back-button>
+
+						</ons-back-button>
+					</div>
+					<div class="center">
+						individual
+					</div>
+				</ons-toolbar>
+				<ons-list modifier="inset" style="margin-top: 10px">
+					<ons-list-item class="item">
+						<ons-row>
+							<ons-col width="60px">
+								<div class="item-thum"><img style="height: 50px; width: 50px;" src="{{item.thum}}"/>
+								</div>
+							</ons-col>
+							<ons-col>
+								<header>
+									<span class="item-title">{{item.problema}}</span>
+									<span class="item-label">{{item.fecha}}</span>
+								</header>
+								<p class="item-desc">
+									<strong>Responsable: </strong>{{item.solucion}}
+								</p>
+							</ons-col>
+						</ons-row>
+					</ons-list-item>
+
+					<ons-list-item modifier="chevron" ng-click="doSomething()">
+						<ons-icon icon="ion-star" fixed-width="true" style="color: #ccc"></ons-icon>
+						Marcar como favorito
+					</ons-list-item>
+				</ons-list>
+
+				<ons-list style="margin-top: 10px">
+					<ons-list-item class="item">
+						<header>
+							<span class="item-title">{{item.problema}}</span>
+						</header>
+						<p class="item-desc">
+							{{item.descripcion}}
+						</p>
+						<p class="item-desc">
+							<strong>Por: </strong>{{item.autor}}
+						</p>
+						<p class="item-desc">
+							<strong>Email: </strong>{{item.email}}
+						</p>
+						<p class="item-desc">
+							<strong>Responsable: </strong>{{item.solucion}}
+						</p>
+						<p class="item-desc">
+							<strong>Avance: </strong>{{item.porcentaje}}
+						</p>
+					</ons-list-item>
+				</ons-list>
+
 			</ons-page>
 		</ons-template>
+<!--Page detailComunicado-->
+		<ons-template id="detailComunicado.html">
+			<ons-page ng-controller="DetailComunicadoController">
+
+				<ons-toolbar class="custom-toolbar">
+					<div class="left">
+						<ons-back-button>
+							Atras
+						</ons-back-button>
+					</div>
+					<div class="center"></div>
+					
+				</ons-toolbar>
+
+				<ons-list modifier="inset" style="margin-top: 10px">
+					<ons-list-item class="item">
+						<ons-row>
+							<ons-col width="60px">
+								<div class="item-thum"></div>
+							</ons-col>
+							<ons-col>
+								<header>
+									<span class="item-title">{{com.asunto}}</span>
+									<span class="item-label">{{com.fecha}}</span>
+								</header>
+								<p class="item-desc">
+									{{com.area}}
+								</p>
+							</ons-col>
+						</ons-row>
+					</ons-list-item>
+
+					<ons-list-item modifier="chevron" ng-click="ons.navigator.pushPage('perfil.html',{animation:'fade'})">
+						<ons-icon icon="ion-chatboxes" fixed-width="true" style="color: #ccc"></ons-icon>
+						<strong>Por: </strong>{{com.author}}
+					</ons-list-item>
+				</ons-list>
+
+				<ons-list style="margin-top: 10px">
+					<ons-list-item class="item">
+						<header>
+							<span class="item-title"></span>
+						</header>
+						<p class="item-desc">
+							{{com.descripcion}}
+						</p>
+					</ons-list-item>
+				</ons-list>
+
+				<ons-list style="margin-top: 10px">
+					<ons-list-item class="item">
+						<header>
+							<span class="item-title">{{com.area}}</span>
+						</header>
+						<p class="item-desc">
+							<strong>Categoria: </strong>{{com.categoria}}
+						</p>
+					</ons-list-item>
+				</ons-list>
+
+				<ons-list style="margin-top: 10px">
+					<ons-list-item class="item">
+						<header>
+							<span class="item-title"></span>
+						</header>
+						<p class="item-desc">
+							<strong>Activo? </strong>{{com.activo}}
+						</p>
+					</ons-list-item>
+				</ons-list>
+
+				<br>
+
+			</ons-page>
+		</ons-template>
+<!--NewComunicado-->
+		<ons-template id='nuevoComunicado.html'>
+         <ons-page ng-controller="NuevoControllerEC">
+
+            <ons-toolbar>
+               <div class="left">
+                  <ons-back-button>
+                     Atras
+                  </ons-back-button>
+               </div>
+               <div class="center">
+                  Nuevo
+               </div>
+            </ons-toolbar>
+            <div class="login-form">
+               <div class="center">
+               	<style>
+               	.caja {
+					 margin : 20px auto 40px auto;
+					 border : 1px solid #d9d9d9;
+					 height : 30px;
+					 overflow : hidden;
+					 width : 230px;
+					 position : relative;
+					 }
+					select {
+					 background : transparent;
+					 border : none;
+					 font-size : 14px;
+					 height : 30px;
+					 padding : 5px;
+					 width : 250px;
+					 }
+					select:focus {
+					 outline : none;
+					 }
+					.caja::after {
+					 content : "\025be";
+					 display : table-cell;
+					 padding-top : 7px;
+					 text-align : center;
+					 width : 30px;
+					 height : 30px;
+					 background-color : #d9d9d9;
+					 position : absolute;
+					 top : 0;
+					 right : 0px;
+					 pointer-events : none;
+					 }
+               	</style>
+                  <form name="alta">
+                     <ons-list modifier="inset" style="margin-top: 10px">
+                        <ons-list-item class="to-wrapper">
+
+                           <ons-list-item>
+                           	  <input type="text" ng-model="formDatae.asunto" placeholder="Asunto..." class="text-input text-input--transparent">
+                           </ons-list-item>
+
+                           <ons-list-item>
+                              <textarea ng-model="formDatae.descripcion"  placeholder="Descripcion..." class="text-input text-input--transparent" style="width: 100%"></textarea>
+                           </ons-list-item>
+                           <ons-list-item>
+                           		<input type="text" ng-model="formDatae.autor" class="text-input text-input--transparent" placeholder="Autor..." value="\"{{mydata.user}}\"">
+                           </ons-list-item>
+                           <ons-list-item>
+                              <label class="form-item">
+                              <span class="input-label">Categoria</span>
+                              <div class="caja">
+                              <select  ng-model="formDatae.categoria">
+                                 <option ng-repeat="cate in cat">{{cate.categorias}}</option>
+                              </select>
+                          	  </div>
+                              </label>
+                       	   </ons-list-item>
+                       	   <ons-list-item>
+                       	   	  <label class="form-item">
+                              <span class="input-label">Area</span>
+                              <div class="caja">
+                              <select  ng-model="formDatae.area">
+                                 <option ng-repeat="area in are">{{area.areas}}</option>
+                              </select>
+                          	  </div>
+                              </label>
+                       	   </ons-list-item>
+                           <ons-list-item>
+                              <label class="form-item">
+                              <span class="input-label">Prioridad</span>
+                              <div class="caja">
+                              <select   ng-model="formDatae.prioridad">
+                                 <option>1-Muy Alta</option>
+                                 <option selected>2-Alta</option>
+                                 <option>3-Media</option>
+                                 <option>4-Baja</option>
+                              </select>
+                          	  </div>
+                              </label>
+                           </ons-list-item>
+                           <ons-list-item>
+                           <label class="form-item">
+                              <span class="input-label">Activo</span>
+                              <div class="caja">
+                              <select  ng-model="formDatae.activo">
+                                 <option>Sí</option>
+                                 <option selected>No</option>
+                              </select>
+                          	  </div>
+                              </label>
+                           </ons-list-item>
+                           <ons-list-item>
+                                 <input  type="date" name="fecha" ng-model="formDatae.fecha" class="text-input text-input--transparent" placeholder="Fecha" style="width: 100%" >
+                           </ons-list-item>
+
+                     </ons-list>
+
+                     <div style="padding: 10px 9px">
+                        <ons-button modifier="large" style="margin: 0 auto;" ng-click="push()">
+                           Agregar
+                        </ons-button>
+                     </div>
+                  </form>
+               </div>
+
+            </div>
+            <div>
+               <video id='mi-video' width='400' controls>
+  					<source src='http://www.w3schools.com/html/mov_bbb.mp4' type='video/mp4'>
+				</video>
+            </div>
+
+         </ons-page>
+      </ons-template>
+<!--PAP-->
 		<ons-template id="PAP.html">
 			<ons-navigator var="navigator">
-				<ons-page ng-controller="PageController">
+				<ons-page>
 					<ons-toolbar class="custom-toolbar">
 						<div class="left">
 							<ons-toolbar-button ng-click="menu.toggle()">
@@ -243,13 +559,102 @@
 						<div class="center">
 							PAP
 						</div>
+
 					</ons-toolbar>
+					<br>
+					<input type="search" class="search-input" style="width: 96%; margin: 6px auto 6px auto;" placeholder="Buscar" ng-model="entradaPAP" />
+					</div>
+					<ons-list ng-controller="PAPController">
+						<ons-list-item modifier="chevron" class="item" ng-repeat="item in items | filter : entradaPAP" ng-click="showPap(item)">
+							<ons-row>
+								<ons-col>
+									<header>
+										<span class="item-title">{{item.Nom}}</span>
+										<span class="item-label">{{item.fecha}}</span>
+
+									</header>
+									<p class="item-desc">
+										<strong>PAP: </strong>{{item.Titulo}}
+									</p>
+									<p class="item-desc">
+										<strong>Estado: </strong>{{item.Estado}}
+									</p>
+									<p class="item-desc">
+										<strong>Prioridad: </strong>{{item.Prioridad}}
+									</p>
+								</ons-col>
+							</ons-row>
+						</ons-list-item>
+					</ons-list>
 				</ons-page>
 			</ons-navigator>
 		</ons-template>
+<!--detailPAP-->
+		<ons-template id="PAPdetail.html">
+			<ons-page ng-controller="DetailPAPController">
+
+				<ons-toolbar class="custom-toolbar">
+					<div class="left">
+						<ons-back-button>
+							Back
+						</ons-back-button>
+					</div>
+					<div class="center">
+						Detalles
+					</div>
+				</ons-toolbar>
+				<br>
+				<ons-list modifier="inset" style="margin-top: 10px">
+					<ons-list-item class="item">
+						<ons-row>
+							<ons-col>
+								<header>
+									<span class="item-title">{{item.Titulo}}</span>
+									<span class="item-label">{{item.nombre}}</span>
+								</header>
+								<p class="item-desc">
+									Porcentaje: {{item.Porcentaje}}
+								</p>
+								<span class="item-desc">Prioridad:{{item.Prioridad}}</span>
+							</ons-col>
+						</ons-row>
+					</ons-list-item>
+
+					<ons-list-item modifier="chevron" ng-click="doSomething()">
+						<ons-icon icon="ion-chatboxes" fixed-width="true" style="color: #ccc"></ons-icon>
+						<strong>Por: </strong>{{item.Nombre}} <span class="item-label">{{item.fecha}}</span>
+						<span class="item-title">{{item.nombre}}</span>
+					</ons-list-item>
+				</ons-list>
+
+				<ons-list style="margin-top: 10px">
+					<ons-list-item class="item">
+						<header>
+							<p class="item-desc">
+								{{item.fecha}}
+							</p>
+						</header>
+						<p class="item-desc">
+							Tiempo de desarrollo: {{item.Tiempo}}
+						</p>
+						<p class="item-desc">
+							Descripción:{{item.Descripcion}}
+						</p>
+						<p class="item-desc">
+							Fecha Inicial: {{item.Fechai}}
+						</p>
+						<span class="item-desc">Fecha final:{{item.Fechaf}}</span>
+					</ons-list-item>
+				</ons-list>
+
+				<br>
+
+			</ons-page>
+		</ons-template>
+<!--Workflow-->
 		<ons-template id="Workflow.html">
 			<ons-navigator var="navigator">
-				<ons-page ng-controller="PageController">
+				<ons-page ng-controller="WorkflowController">
 					<ons-toolbar class="custom-toolbar">
 						<div class="left">
 							<ons-toolbar-button ng-click="menu.toggle()">
@@ -260,9 +665,337 @@
 							Workflow
 						</div>
 					</ons-toolbar>
+					<ons-list style="margin-top: 50px">
+
+						<ons-list-item modifier="chevron" class="item" ng-click="cuentas()">
+							<ons-row>
+								<ons-col>
+									<header>
+										<span class="item-title">Módulo cuentas</span>
+									</header>
+								</ons-col>
+							</ons-row>
+						</ons-list-item>
+						<ons-list-item modifier="chevron" class="item" ng-click="contactos()">
+							<ons-row>
+								<ons-col>
+									<header>
+										<span class="item-title">Módulo contactos</span>
+									</header>
+								</ons-col>
+							</ons-row>
+						</ons-list-item>
+						<ons-list-item modifier="chevron" class="item" ng-click="pipeline()">
+							<ons-row>
+								<ons-col>
+									<header>
+										<span class="item-title">Módulo sales tracker</span>
+									</header>
+								</ons-col>
+							</ons-row>
+						</ons-list-item>
+					</ons-list>
 				</ons-page>
 			</ons-navigator>
 		</ons-template>
+<!--Inicio View modCuentas-->
+		<ons-template id="modCuentas.html">
+			<ons-page ng-controller="modCuentasController">
+
+				<ons-toolbar class="custom-toolbar">
+					<div class="left">
+						<ons-back-button>
+							Atras
+						</ons-back-button>
+					</div>
+					<div class="center">
+						Cuentas
+					</div>
+				</ons-toolbar>
+				<ons-list style="margin-top: 30px">
+					<ons-list-item modifier="chevron" class="item" ng-repeat="b in base" ng-click="cuentaOne(b)">
+						<ons-row>
+							<ons-col>
+								<header>
+									<span class="item-title">{{b.Name}}</span>
+									<span class="item-label">{{b.State}}</span>
+								</header>
+								<p class="item-desc">
+									 {{b.City}}
+								</p>
+							</ons-col>
+						</ons-row>
+					</ons-list-item>
+				</ons-list>
+			</ons-page>
+		</ons-template>
+<!--fin View modCuentas-->
+<!--Inicio View modContactos-->
+		<ons-template id="modContactos.html">
+			<ons-page ng-controller="modContactosController">
+
+				<ons-toolbar class="custom-toolbar">
+					<div class="left">
+						<ons-back-button>
+							Atras
+						</ons-back-button>
+					</div>
+					<div class="center">
+						Cuentas
+					</div>
+				</ons-toolbar>
+				<ons-list style="margin-top: 30px">
+					<ons-list-item modifier="chevron" class="item" ng-repeat="b in base" ng-click="contactoOne(b)">
+						<ons-row>
+							<ons-col>
+								<header>
+									<span class="item-title">{{b.Greeting}} {{b.Name}}</span>
+									<span class="item-label">{{b.Title}}</span>
+								</header>
+								<p class="item-desc">
+									 {{b.Mobile}}
+								</p>
+							</ons-col>
+						</ons-row>
+					</ons-list-item>
+				</ons-list>
+			</ons-page>
+		</ons-template>
+<!--fin View modContactos-->
+<!--Inicio View modPipeline-->
+		<ons-template id="modPipeline.html">
+			<ons-page ng-controller="modPipelineController">
+
+				<ons-toolbar class="custom-toolbar">
+					<div class="left">
+						<ons-back-button>
+							Atras
+						</ons-back-button>
+					</div>
+					<div class="center">
+						Sales Tracker
+					</div>
+				</ons-toolbar>
+				<ons-list style="margin-top: 30px">
+					<ons-list-item modifier="chevron" class="item" ng-repeat="b in base" ng-click="pipelineOne(b)">
+						<ons-row>
+							<ons-col>
+								<header>
+									<span class="item-title">{{b.Stage}}</span>
+									<span class="item-label">{{b.CreateDate}}</span>
+								</header>
+								<p class="item-desc">
+									 {{b.Description}}
+								</p>
+							</ons-col>
+						</ons-row>
+					</ons-list-item>
+				</ons-list>
+			</ons-page>
+		</ons-template>
+<!--fin View modPipeline-->
+<!--Inicio View Cuenta-->
+		<ons-template id="cuentas.html">
+			<ons-page ng-controller="cuentasController">
+
+				<ons-toolbar class="custom-toolbar">
+					<div class="left">
+						<ons-back-button>
+							Atras
+						</ons-back-button>
+					</div>
+					<div class="center">
+						Cuenta
+					</div>
+				</ons-toolbar>
+				<ons-list style="margin-top: 30px">
+					<ons-list-item class="item" >
+						<ons-row>
+							<ons-col>
+								<header>
+									<span class="item-title"><strong>{{b.Name}}</strong></span>
+									<span class="item-label">{{b.State}}</span>
+								</header>
+								<p class="item-desc">
+									 {{b.City}}
+								</p>
+							</ons-col>
+						</ons-row>
+						<ons-row>
+							<ons-col>
+								
+								<p class="item-desc">
+									 <strong>Encargado de la cuenta: </strong>{{b.AccountManager}}
+								</p>
+							</ons-col>
+						</ons-row>
+						<ons-row>
+							<ons-col>
+								
+								<p class="item-desc">
+									 <strong>Direccion: </strong>{{b.Address}}
+								</p>
+								<p class="item-desc">
+									 <strong>País: </strong>{{b.Country}}
+								</p>
+							</ons-col>
+						</ons-row>
+						<ons-row>
+							<ons-col>
+								
+								<p class="item-desc">
+									 <strong>Teléfono: </strong>{{b.Phone}}
+								</p>
+								<p class="item-desc">
+									 <strong>Fax: </strong>{{b.FAX}}
+								</p>
+							</ons-col>
+						</ons-row>
+					</ons-list-item>
+				</ons-list>
+			</ons-page>
+		</ons-template>
+<!--Fin View Cuenta-->
+<!--Inicio View Contacto-->
+		<ons-template id="contactos.html">
+			<ons-page ng-controller="contactosController">
+
+				<ons-toolbar class="custom-toolbar">
+					<div class="left">
+						<ons-back-button>
+							Atras
+						</ons-back-button>
+					</div>
+					<div class="center">
+						Contactos
+					</div>
+				</ons-toolbar>
+				<ons-list style="margin-top: 30px">
+					<ons-list-item class="item" >
+						<ons-row>
+							<ons-col>
+								<header>
+									<span class="item-title"><strong>{{b.Greeting}} {{b.Name}}</strong></span>
+                                    <span class="item-label">{{b.Type}}</span>
+								</header>
+								<p class="item-desc">
+									 <strong>Empresa: </strong>{{b.Title}}
+								</p>
+							</ons-col>
+						</ons-row>
+						<ons-row>
+							<ons-col>
+								
+								<p class="item-desc">
+									 <strong>Estatus actual: </strong>{{b.Status}}
+								</p>
+							</ons-col>
+						</ons-row>
+                        <ons-row>
+							<ons-col>
+								
+								<p class="item-desc">
+									 <strong>Telefono: </strong>{{b.Phone}}
+								</p>
+							</ons-col>
+						</ons-row>
+						<ons-row>
+							<ons-col>
+								
+								<p class="item-desc">
+									 <strong>Mobil: </strong>{{b.Mobile}}
+								</p>
+								<p class="item-desc">
+									 <strong>Fax: </strong>{{b.FAX}}
+								</p>
+							</ons-col>
+						</ons-row>
+						<ons-row>
+							<ons-col>
+								
+								<p class="item-desc">
+									 <strong>Email: </strong>{{b.Email}}
+								</p>
+								<p class="item-desc">
+									 <strong>Skype: </strong>{{b.Skype}}
+								</p>
+							</ons-col>
+						</ons-row>
+					</ons-list-item>
+				</ons-list>
+			</ons-page>
+		</ons-template>
+<!--Fin View Contacto-->
+<!--Inicio View Pipeline-->
+		<ons-template id="pipeline.html">
+			<ons-page ng-controller="pipelineController">
+
+				<ons-toolbar class="custom-toolbar">
+					<div class="left">
+						<ons-back-button>
+							Atras
+						</ons-back-button>
+					</div>
+					<div class="center">
+						Sales Tracker
+					</div>
+				</ons-toolbar>
+				<ons-list style="margin-top: 30px">
+					<ons-list-item class="item" >
+						<ons-row>
+							<ons-col>
+								<header>
+									<span class="item-title"><strong>{{b.ProductType}}</strong></span>
+                                    <span class="item-label">{{b.CreateDate}}</span>
+								</header>
+								<p class="item-desc">
+									 <strong></strong>{{b.Description}}
+								</p>
+							</ons-col>
+						</ons-row>
+						<ons-row>
+							<ons-col>
+								
+								<p class="item-desc">
+									 <strong>Cuenta: </strong>{{b.Account}}
+								</p>
+							</ons-col>
+						</ons-row>
+                        <ons-row>
+							<ons-col>
+								
+								<p class="item-desc">
+									 <strong>Contacto: </strong>{{b.Contact}}
+								</p>
+							</ons-col>
+						</ons-row>
+						<ons-row>
+							<ons-col>
+								
+								<p class="item-desc">
+									 <strong>Asignado a: </strong>{{b.Assignedto}}
+								</p>
+								<p class="item-desc">
+									 <strong>Oportunidad: </strong>{{b.Opportunity}}
+								</p>
+							</ons-col>
+						</ons-row>
+						<ons-row>
+							<ons-col>
+								
+								<p class="item-desc">
+									 <strong>Proximo contacto: </strong>{{b.NextContactDate}}
+								</p>
+								<p class="item-desc">
+									 <strong>Proximo contacto de tipo: </strong>{{b.NextContactType}}
+								</p>
+							</ons-col>
+						</ons-row>
+					</ons-list-item>
+				</ons-list>
+			</ons-page>
+		</ons-template>
+<!--Fin View Pipeline-->
 		<ons-template id="eCommunicator.html">
 			<ons-navigator var="navigator">
 				<ons-page ng-controller="ECommunicator">
@@ -273,91 +1006,42 @@
 							</ons-toolbar-button>
 						</div>
 						<div class="center">
-							E - Communicator
+							eCommunicator
 						</div>
+						<div class="right">
+       					<ons-toolbar-button ng-click="nuevoComunicado()">
+        					<ons-icon icon="ion-compose" size="28px" fixed-width="false"></ons-icon>
+       					</ons-toolbar-button>
+      				    </div>
 					</ons-toolbar>
-					<ons-list>
-					<style>
-            th { font-size: 15px;
-                font-family: Arial;
-                font-weight: normal; padding: 8px; background: #b9c9fe; border-top: 4px solid #aabcfe;
-                text-transform:uppercase;
-                 border-bottom: 1px solid #fff; color: #039;
-                }
-            
-            tr {
-                border: 0px solid #000;
-            }
-            td { padding: 8px; background: white; border-bottom: 1px solid #fff; color: #669; border-top: 1px solid transparent; }
-            .table-stroke thead th {
-                  border-bottom: 1px solid rgba(0, 0, 0, .1);
-                }
-                .table-stroke tbody th,
-                .table-stroke tbody td {
-                  border-bottom: 1px solid rgba(0, 0, 0, .05);
-                }
- 
 
-            /*tr:hover td { background: #d0dafd; color: #339; } */
-            /* Add alternating row stripes */
-            .table-stripe tbody tr:nth-child(odd) td,
-            .table-stripe tbody tr:nth-child(odd) th {
-              background-color: rgba(0,0,0,0.04);
-            }
-            /* Add stroke to the header and last item */
-            .table-stripe thead th,
-            .table-stripe tbody tr:last-child {
-              border-bottom: 1px solid rgba(0, 0, 0, .1);
-            }
-			.name{
-				background: #2371AF;
-				height: 40px;
-				padding-top: 20px;
-				color: #FFFFFF;
-				text-align:center;
-			}
-</style>
-					<div ng-app="myApp" ng-controller="ECommunicator"> 
+					<ons-list style="margin-top: 30px">
 
-					<p><input type="text" ng-model="test" data-type="search" placeholder="Buscar registro..." width="100%"></p>
-					<table class="table table-striped" ng-repeat="x in names |  filter:test" width="100%">
-					  <tr>
-					    <th>{{ x.ht }}</th>
-					  </tr>
-					  <tr>
-					    <td>{{ x.asunto }}</td>
-					  </tr>
-					  <tr>  
-					    <td>{{ x.Author}}</td>
-					  </tr>
-					  <tr>
-					    <td>{{ x.categoria }}</td>
-					  </tr>
-					  <tr>
-					    <td>{{ x.area }}</td>
-					  </tr>
-					  <tr>
-					    <td>{{ x.prioridad }}</td>
-					  </tr>
-					  <tr>
-					    <td>{{ x.fecha }}</td>
-					  </tr>
-					  <tr>
-					    <td>{{ x.activo }}</td>
-					  </tr>
-					  <tr>
-					    <td>{{ x.descripcion }}</td>
-					  </tr>
-					  </hr>
-					</table>
-				</div>
-				</ons-list>
+						<!--<div id="ticketbox"></div>-->
+						<ons-list-item modifier="chevron" class="item" ng-repeat="name in names" ng-click="showCom(name)">
+							<ons-row>
+								<ons-col width="60px">
+									<!--div class="item-thum"></div-->
+								</ons-col>
+								<ons-col>
+									<header>
+										<span class="item-title">{{name.asunto}}</span>
+										<span class="item-label">{{name.fecha}}</span>
+									</header>
+									<p class="item-desc">
+										{{name.descripcion}}
+									</p>
+								</ons-col>
+							</ons-row>
+						</ons-list-item>
+					</ons-list>
 				</ons-page>
 			</ons-navigator>
 		</ons-template>
+<!--MBlocs-->
 		<ons-template id="mblocs.html">
 			<ons-navigator var="navigator">
-				<ons-page ng-controller="PageController">
+				<ons-page>
 					<ons-toolbar class="custom-toolbar">
 						<div class="left">
 							<ons-toolbar-button ng-click="menu.toggle()">
@@ -367,10 +1051,112 @@
 						<div class="center">
 							mBlocs
 						</div>
+
 					</ons-toolbar>
+					<br>
+					<input type="search" class="search-input" style="width: 96%; margin: 6px auto 6px auto;"
+					placeholder="Buscar" ng-model="mBlocs">
+					<ons-list ng-controller="BlocController">
+						<ons-list-item modifier="chevron" class="item" ng-repeat="item in items | filter : mBlocs"
+						ng-click="showDetail(item)">
+							<ons-row>
+								<ons-col>
+									<span class="item-title">{{item.Name}}</span>
+									<span class="item-label">{{item.item.Status}}</span>
+									<p class="item-desc">
+										<strong>Estado: </strong>{{item.Status}}
+									</p>
+									<p class="item-desc">
+										<strong>Tipo: </strong>{{item.Type}}
+									</p>
+									<p class="item-desc">
+										<strong>Por: </strong>{{item.Contributed}}
+									</p>
+								</ons-col>
+							</ons-row>
+						</ons-list-item>
+					</ons-list>
 				</ons-page>
 			</ons-navigator>
 		</ons-template>
-		
+<!--detailMBlocs-->
+		<ons-template id="detailMBloc.html">
+			<ons-page ng-controller="DetailBlocController">
+				<ons-toolbar class="custom-toolbar">
+					<div class="left">
+						<ons-back-button>
+							Atras
+						</ons-back-button>
+					</div>
+					<div class="center">
+						Detalles
+					</div>
+				</ons-toolbar>
+				<br>
+				<ons-list modifier="inset" style="margin-top: 10px">
+					<ons-list-item class="item">
+						<ons-row>
+							<ons-col>
+								<p align="center">
+									<span class="item-title">{{item.Name}}</span>
+								</p>
+								<p align="right">
+									<span class="item-desc">{{item.Date_of_last_update}}</span>
+								</p>
+								<p class="item-desc">
+									<strong>Descripción: </strong>{{item.Description}}
+								</p>
+								<p class="item-desc">
+									<strong>Autor: </strong>{{item.Author}}
+								</p>
+								<p class="item-desc">
+									<strong>Idioma: </strong>{{item.Language}}
+								</p>
+								<p class="item-desc">
+									<strong>Mas información: </strong>{{item.More_information}}
+								</p>
+							</ons-col>
+						</ons-row>
+					</ons-list-item>
+
+					<ons-list-item modifier="chevron" ng-click="doSomething()">
+						<p class="item-desc">
+							<strong>Por: </strong>{{item.Contributed}}
+						</p>
+					</ons-list-item>
+				</ons-list>
+			</ons-page>
+		</ons-template>
+<!--login-->
+		<ons-template id="login2.html">
+			<ons-page style="background-image: url('splash.png'); no-repeat center center fixed;
+			-webkit-background-size: cover;
+			background-size: cover;" ng-controller="LoginController">
+
+				<div class="login-form2">
+					<div class="center">
+						<form id="logueo2">
+							<input ng-model="formLogin.nombre" name="nombre" type="text" class="text-input--underbar login-boxes" placeholder="Usuario" style="background: rgba(255, 255, 255, 0.4); text-align: center; border-radius: 5px;" />
+							<br>
+							<input ng-model="formLogin.pass" name="pass" type="password" class="text-input--underbar login-boxes" placeholder="Contraseña" style="background: rgba(255, 255, 255, 0.4);; text-align: center; border-radius: 5px;" />
+							<br>
+							<br>
+							<ons-button modifier="large" class="login-button" ng-click="login()">
+								Log In
+							</ons-button>
+							<br>
+						</form>
+					</div>
+
+				</div>
+
+			</ons-page>
+		</ons-template>
+		<ons-modal var="modal">
+			<ons-icon icon="ion-loading-c" spin="true"></ons-icon>
+			<br>
+			Cargando informacion, por favor espere ...
+		</ons-modal>
+
 	</body>
 </html>
